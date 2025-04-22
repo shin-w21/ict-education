@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中学校社会 公民クイズ</title>
+    <link rel="stylesheet" href="./Setting/setting.css">
+</head>
+<body>
+
+    <!-- タイトル画面 -->
+    <div class="container" id="title-screen">
+        <h1>第２章　個人を尊重する日本国憲法</h1>
+        <p>２節　憲法が保障する基本的人権</p>
+        <button class="btn" onclick="startQuiz()">クイズを始める</button>
+        <button class="btn_re" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+    </div>
+
+    <!-- クイズ画面（最初は非表示） -->
+    <div class="container hidden" id="quiz-screen">
+        <p class="question" id="question"></p>
+        <div class="choices" id="choices"></div>
+        <p class="result" id="result"></p>
+        <p class="explanation" id="explanation"></p>
+        <button class="next-btn" onclick="nextQuestion()">次へ</button>
+    </div>
+
+    <!-- 終了画面（最初は非表示） -->
+    <div class="container hidden" id="end-screen">
+        <h1>クイズ終了！</h1>
+        <p>お疲れ様でした！</p>
+        <button class="btn" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+    </div>
+
+    <script>
+        const allQuizData = [
+            {
+                question: "日本国憲法の三大原則に含まれないものは？",
+                choices: ["国民主権", "基本的人権の尊重", "国民皆保険", "平和主義"],
+                correct: 2,
+                explanation: "三大原則は「国民主権」「基本的人権の尊重」「平和主義」です。「国民皆保険」は憲法の原則ではなく、社会保障制度の一つです。"
+            },
+            {
+                question: "三権分立に含まれないものは？",
+                choices: ["立法", "行政", "司法", "警察"],
+                correct: 3,
+                explanation: "三権分立は「立法（国会）」「行政（内閣）」「司法（裁判所）」です。「警察」は行政機関の一部に含まれます。"
+            },
+            {
+                question: "内閣総理大臣を指名するのは？",
+                choices: ["国会", "内閣", "最高裁判所", "天皇"],
+                correct: 0,
+                explanation: "内閣総理大臣は国会で指名され、天皇が正式に任命します。"
+            },
+            {
+                question: "日本の選挙制度で、18歳以上が投票できる選挙は？",
+                choices: ["衆議院議員選挙", "参議院議員選挙", "地方議会選挙", "すべて"],
+                correct: 3,
+                explanation: "2016年の法改正により、18歳以上がすべての選挙で投票できるようになりました。"
+            },
+            {
+                question: "憲法改正に必要な条件は？",
+                choices: ["国会の過半数の賛成", "内閣の決定", "国民投票で過半数の賛成", "最高裁の承認"],
+                correct: 2,
+                explanation: "憲法改正には、国会の2/3以上の賛成と、国民投票で過半数の賛成が必要です。"
+            }
+        ];
+
+        let quizData = [];
+        let currentQuestionIndex = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            document.getElementById("title-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+            document.getElementById("end-screen").classList.add("hidden");
+
+            shuffle(allQuizData);
+            quizData = allQuizData.slice(0, 5); // 5問をランダム選出
+            currentQuestionIndex = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("question").textContent = questionData.question;
+            document.getElementById("choices").innerHTML = "";
+            document.getElementById("result").textContent = "";
+            document.getElementById("explanation").textContent = "";
+            document.querySelector(".next-btn").style.display = "none";
+
+            questionData.choices.forEach((choice, index) => {
+                const button = document.createElement("button");
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(index);
+                document.getElementById("choices").appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("result").textContent = selectedIndex === questionData.correct ? "正解！ 🎉" : "不正解 ❌";
+            document.getElementById("explanation").textContent = questionData.explanation;
+            document.querySelector(".next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").classList.add("hidden");
+                document.getElementById("end-screen").classList.remove("hidden");
+            }
+        }
+
+        function returnToTitle() {
+            document.getElementById("end-screen").classList.add("hidden");
+            document.getElementById("title-screen").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
