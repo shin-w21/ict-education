@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中学校社会 公民クイズ</title>
+
+    <style>
+     body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .info {
+            text-align: right;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .hidden {
+            display: none;
+        }
+        .choices button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .choices button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        .explanation {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        .next-btn {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .next-btn:hover {
+            background-color: #218838;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <p class="info">情報通信技術2025</p>
+    <!-- タイトル画面 -->
+    <div class="container" id="title-screen">
+        <h1>スマホでできる！<br>期末テスト対策問題</h1>
+        <p>　</p>
+        <p>　</p>
+        <h2>第１章　私たちの暮らしと現代社会</h2>
+        <p>教科書P.10〜25</p>
+        <button class="btn" onclick="location.href='./quiz_choice/11_私たちが生きる現代社会.html'">私たちが生きる現代社会</button>
+        <button class="btn" onclick="location.href='./quiz_choice/12_現代につながる伝統と文化.html'">現代につながる伝統と文化</button>
+        <button class="btn" onclick="location.href='./quiz_choice/13_私たちがつくるこれからの社会.html'">私たちがつくるこれからの社会</button>
+
+        <p>　</p>
+        <p>　</p>
+        <p>　</p>
+        <h2>第２章　個人を尊重する日本国憲法</h2>
+        <p>教科書P.27〜40</p>
+        <button class="btn" onclick="location.href='./quiz_choice/21_日本国憲法の成り立ちと国民主権.html'">日本国憲法の成り立ちと国民主権</button>
+        <button class="btn" onclick="location.href='./quiz_choice/22_憲法が保障する基本的人権.html'">憲法が保障する基本的人権</button>
+        <button class="btn" onclick="location.href='./quiz_choice/23_私たちと平和主義.html'">私たちと平和主義</button>
+
+
+    </div>
+
+    <script>
+
+        let quizData = [];
+        let currentQuestionIndex = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            document.getElementById("title-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+            document.getElementById("end-screen").classList.add("hidden");
+
+            shuffle(allQuizData);
+            quizData = allQuizData.slice(0, 5); // 5問をランダム選出
+            currentQuestionIndex = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("question").textContent = questionData.question;
+            document.getElementById("choices").innerHTML = "";
+            document.getElementById("result").textContent = "";
+            document.getElementById("explanation").textContent = "";
+            document.querySelector(".next-btn").style.display = "none";
+
+            questionData.choices.forEach((choice, index) => {
+                const button = document.createElement("button");
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(index);
+                document.getElementById("choices").appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("result").textContent = selectedIndex === questionData.correct ? "正解！ 🎉" : "不正解 ❌";
+            document.getElementById("explanation").textContent = questionData.explanation;
+            document.querySelector(".next-btn").style.display = "block";
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").classList.add("hidden");
+                document.getElementById("end-screen").classList.remove("hidden");
+            }
+        }
+
+        function returnToTitle() {
+            document.getElementById("end-screen").classList.add("hidden");
+            document.getElementById("title-screen").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
