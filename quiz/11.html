@@ -150,13 +150,13 @@
       },
       {
         question: "少子高齢化が進む日本で、必要とされている取り組みはどれか？",
-        choices: ["海外旅行の促進", "若者の海外移住の支援", "高齢者や子育て世代を支える仕組みづくり", "学校数の減少"],
+        choices: ["地方部への移住促進", "高齢者世代の海外移住の支援", "高齢者や子育て世代を支える仕組みづくり", "学校数の減少"],
         correct: 2,
         explanation: "日本の人口構成が高齢化し、子どもの数が減っていることが問題として取り上げられています。このような社会で誰もが安心して暮らせるために、介護や保育などの支援制度が重要とされています。"
       },
       {
         question: "「ユニバーサルデザイン」の具体例として適切なものはどれか？",
-        choices: ["高級ホテルの装飾", "すべての人が使いやすいデザインの公共施設", "特定の人だけが使える装置", "個人宅向けの豪華な家具"],
+        choices: ["企業向けのデータを活用した経営デザイン", "すべての人が使いやすいデザインの公共施設", "特定の核家族世帯に対する理想支援", "個人宅向けの豪華な家具"],
         correct: 1,
         explanation: "ユニバーサルデザインとは、年齢や障がいの有無に関係なく、誰もが使いやすいように設計されたもののことです。教科書では、スロープ付きの駅や音声案内付きの機械などが紹介されていました。"
       },
@@ -205,9 +205,9 @@
       const explanationEl = document.getElementById("explanation");
 
       if (selectedIndex === questionData.correct) {
-        resultEl.textContent = "正解！ 🎉";
+        resultEl.textContent = "正解！";
       } else {
-        resultEl.textContent = "不正解 ❌";
+        resultEl.textContent = "不正解";
       }
 
       explanationEl.textContent = questionData.explanation;
