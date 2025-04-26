@@ -229,9 +229,15 @@
 
       explanationEl.textContent = questionData.explanation;
 
-      // 選択肢をすべて無効化
-      const choiceButtons = document.querySelectorAll("#choices button");
-      choiceButtons.forEach(btn => btn.disabled = true);
+      // ボタンをすべて無効化 ＋ 正解の選択肢を緑色に
+      choiceButtons.forEach((btn, index) => {
+       btn.disabled = true;
+        if (index === questionData.correct) {
+         btn.style.backgroundColor = "#28a745"; // 正解ボタンを緑色に
+        btn.style.color = "white"; // テキスト色も白にすると見やすい
+        }
+       });
+
 
       const nextButton = document.querySelector(".next-btn");
       nextButton.style.display = "inline-block";
