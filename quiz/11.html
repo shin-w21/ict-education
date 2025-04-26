@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>中学校社会 公民クイズ</title>
+  <title>スマホでできる期末テスト対策問題</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -76,19 +76,6 @@
       margin-top: 15px;
     }
 
-    .btn_re{
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 20px;
-            background-color: gray;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-     }
-
-
     .next-btn {
       display: none;
       padding: 10px 15px;
@@ -109,15 +96,12 @@
   <!-- 表紙画面 -->
   <div class="container" id="title-screen">
     <h2>１節<br>私たちが生きる現代社会</h2>
-    <button class="btn_re" onclick="location.href='../index.html'">タイトル画面に戻る</button>
     <button class="btn" onclick="startQuiz()">クイズを始める</button>
   </div>
 
-  
   <!-- クイズ画面 -->
   <div class="container hidden" id="quiz-screen">
     <h2>１節<br>私たちが生きる現代社会</h2>
-
     <p class="question" id="question"></p>
     <div class="choices" id="choices"></div>
     <p class="result" id="result"></p>
@@ -130,7 +114,7 @@
   <!-- 終了画面 -->
   <div class="container hidden" id="end-screen">
     <h1>クイズ終了！</h1>
-    <p>お疲れ様でした！</p>
+    <p id="score"></p>
     <button class="btn" onclick="returnToTitle()">タイトル画面に戻る</button>
   </div>
 
@@ -170,6 +154,8 @@
 
     let quizData = [];
     let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let hasAnswered = false; // 回答済みかどうか
 
     function startQuiz() {
       document.getElementById("title-screen").classList.add("hidden");
@@ -178,10 +164,12 @@
 
       quizData = [...allQuizData].sort(() => 0.5 - Math.random()).slice(0, 5);
       currentQuestionIndex = 0;
+      correctCount = 0;
       loadQuestion();
     }
 
     function loadQuestion() {
+      hasAnswered = false;
       const questionData = quizData[currentQuestionIndex];
       document.getElementById("question").textContent = questionData.question;
       document.getElementById("choices").innerHTML = "";
@@ -200,17 +188,25 @@
     }
 
     function checkAnswer(selectedIndex) {
+      if (hasAnswered) return; // すでに回答済みなら無視
+
+      hasAnswered = true;
       const questionData = quizData[currentQuestionIndex];
       const resultEl = document.getElementById("result");
       const explanationEl = document.getElementById("explanation");
 
       if (selectedIndex === questionData.correct) {
         resultEl.textContent = "正解！";
+        correctCount++;
       } else {
         resultEl.textContent = "不正解";
       }
 
       explanationEl.textContent = questionData.explanation;
+
+      // 選択肢をすべて無効化
+      const choiceButtons = document.querySelectorAll("#choices button");
+      choiceButtons.forEach(btn => btn.disabled = true);
 
       const nextButton = document.querySelector(".next-btn");
       nextButton.style.display = "inline-block";
@@ -232,6 +228,7 @@
     function showEndScreen() {
       document.getElementById("quiz-screen").classList.add("hidden");
       document.getElementById("end-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です！`;
     }
 
     function returnToTitle() {
@@ -240,5 +237,6 @@
       document.getElementById("end-screen").classList.add("hidden");
     }
   </script>
+
 </body>
 </html>
