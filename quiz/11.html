@@ -36,6 +36,18 @@
       font-size: 16px;
     }
 
+    .btn-title {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
     .btn-re {
       display: inline-block;
       padding: 10px 15px;
@@ -108,6 +120,7 @@
   <!-- 表紙画面 -->
   <div class="container" id="title-screen">
     <h2>１節<br>私たちが生きる現代社会</h2>
+    <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
     <button class="btn" onclick="startQuiz()">クイズを始める</button>
   </div>
 
@@ -127,10 +140,7 @@
   <div class="container hidden" id="end-screen">
     <h1>クイズ終了！</h1>
     <p id="score"></p>
-    <button class="btn-re" onclick="location.href='../index.html'">
-     戻る
-    </button>
-    <button class="btn" onclick="returnToTitle()">タイトル画面に戻る</button>
+    <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
   </div>
 
   <script>
