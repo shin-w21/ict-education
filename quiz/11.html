@@ -36,6 +36,18 @@
       font-size: 16px;
     }
 
+    .btn-re {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: gray;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
     .btn:hover {
       background-color: #0056b3;
     }
@@ -115,7 +127,7 @@
   <div class="container hidden" id="end-screen">
     <h1>クイズ終了！</h1>
     <p id="score"></p>
-    <button onclick="location.href='../index.html'" style="background-color: gray; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+    <button class="btn-re" onclick="location.href='../index.html'">
      戻る
     </button>
     <button class="btn" onclick="returnToTitle()">タイトル画面に戻る</button>
