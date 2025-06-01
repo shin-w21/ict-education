@@ -3,130 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>スマホでできる期末テスト対策問題</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: 50px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    h1, h2 {
-      color: #333;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 10px 15px;
-      margin-top: 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn-title {
-      display: inline-block;
-      padding: 10px 15px;
-      margin-top: 20px;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn-re {
-      display: inline-block;
-      padding: 10px 15px;
-      margin-top: 20px;
-      background-color: gray;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-
-    .btn:hover {
-      background-color: #0056b3;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .choices button {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      margin: 5px 0;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .choices button:hover {
-      background-color: #0056b3;
-    }
-
-    .result {
-      font-size: 16px;
-      margin-top: 15px;
-    }
-
-    .explanation {
-      font-size: 14px;
-      color: #666;
-      margin-top: 10px;
-    }
-
-    .next-btn-wrapper {
-      text-align: right;
-      margin-top: 15px;
-    }
-
-    .next-btn {
-      display: none;
-      padding: 10px 15px;
-      background-color: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .next-btn:hover {
-      background-color: #218838;
-    }
-  </style>
+  <title>スマホでできる定期テスト対策問題</title>
+  <link rel="stylesheet" href="setting.css">
 </head>
 <body>
 
   <!-- 表紙画面 -->
   <div class="container" id="title-screen">
-    <h2>１節<br>私たちが生きる現代社会</h2>
+    <h2>２節<br>これからの日本経済の課題</h2>
     <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
     <button class="btn" onclick="startQuiz()">クイズを始める</button>
   </div>
 
   <!-- クイズ画面 -->
   <div class="container hidden" id="quiz-screen">
-    <h2>１節<br>私たちが生きる現代社会</h2>
+    <h2>２節<br>これからの日本経済の課題</h2>
     <p class="question" id="question"></p>
     <div class="choices" id="choices"></div>
     <p class="result" id="result"></p>
@@ -146,34 +37,34 @@
   <script>
     const allQuizData = [
       {
-        question: "グローバル化が進む中で、文化の多様性を守るために大切だと考えられている態度として適切なものはどれか？",
-        choices: ["自国の文化のみを優先して守る姿勢", "異なる文化を否定し、自国の価値観を広めること", "異なる文化や価値観を理解し尊重する姿勢", "外国の文化に完全に合わせて生活すること"],
-        correct: 2,
-        explanation: "グローバル化によって他国の文化が身近になる一方で、文化的な摩擦も生まれる可能性があるとされています。そこで重要になるのが「相互理解」と「多文化共生」の考え方です。異なる価値観を尊重し合う姿勢が、国際社会ではとても大切になります。"
-      },
-      {
-        question: "情報社会における年齢や地域差、情報環境によって生まれる格差のことをなんというでしょうか。",
-        choices: ["情報モラル", "情報リテラシー", "デジタルデバイト", "デジタルデカント"],
-        correct: 2,
-        explanation: "情報技術を使える人と使えない人、スマートフォンやインターネットにアクセスできる人とできない人の間で起こる格差のことをデジタルデバイト（情報格差）と言います。"
-      },
-      {
-        question: "少子高齢化が進む日本で、子どもを安心して育てられる社会を実現するために求められることとして最も適切なものはどれか？",
-        choices: ["子育て世代に対する社会的支援の拡充", "子どもの数を減らすための政策", "高齢者向けの施設の削減", "教育費の削減"],
-        correct: 0,
-        explanation: "少子化の一因として「子育ての負担の大きさ」や「仕事と家庭の両立の難しさ」が挙げられていました。そのため、保育所の整備、育児休暇制度の充実など、子育て支援が重要だとされています。"
-      },
-      {
-        question: "IoTやAIなどの技術が進化する中で、私たちに求められる力として最も適切なものはどれか？",
-        choices: ["技術に頼り考える力を減らし体力を温存すること", "機械を信用しすぎず、使わないようにすること", "技術を理解し、適切に使いこなす力", "インターネットから離れた生活を心がけること"],
-        correct: 2,
-        explanation: "IoTやAIが私たちの生活を便利にする一方で、それらを「正しく使いこなす力＝情報活用能力」も必要だと述べられていました。技術に振り回されるのではなく、自分で情報を判断して行動できる力が重要です。"
-      },
-      {
-        question: "高齢者が地域で活躍できる社会をつくるために必要な取り組みとして最もふさわしいものはどれか？",
-        choices: ["高齢者の外出を制限する制度の導入", "高齢者の知識や経験を活かす活動の推進", "高齢者を若者と完全に分けて生活させること", "高齢者の雇用を一切打ち切ること"],
+        question: "経済のグローバル化の説明として正しいものを選びなさい。",
+        choices: ["国内経済だけで発展すること", "地球規模でモノ・お金・人・情報が自由に行き来すること", "政府がすべての貿易を管理すること", "地域経済を国内市場に閉じ込めること"],
         correct: 1,
-        explanation: "高齢者も社会の一員として「支えられる側」から「支える側」にもなれるような社会づくりが紹介されています。たとえばボランティア活動や地域での見守り活動など、経験を活かせる場を増やすことが大切です。"
+        explanation: "正解は「地球規模でモノ・お金・人・情報が自由に行き来すること」です。経済のグローバル化とは、貿易の自由化や通信・輸送技術の発達により、世界中のモノ・お金・人・情報が国境を越えて行き来し、相互に関わり合う経済の状態を指します。"
+      },
+      {
+        question: "経済のグローバル化が進むことで国内に起きる問題として正しいものを選びなさい。",
+        choices: ["産業の空洞化", "産業の多様化", "労働者の増加", "地域資源の豊富化"],
+        correct: 0,
+        explanation: "正解は「産業の空洞化」です。グローバル化により、企業が安価な労働力や土地を求めて海外移転すると、国内の産業や雇用が減少する「産業の空洞化」が発生します。"
+      },
+      {
+        question: "「六次産業化」の意味として正しいものを選びなさい。",
+        choices: ["一次産業の効率化のみを目指すこと", "輸入品のみに依存する経済構造を作ること", "農業をやめて工業化を進めること", "地元の農産物や水産物を加工・販売し、地域ブランド化すること"],
+        correct: 3,
+        explanation: "正解は「地元の農産物や水産物を加工・販売し、地域ブランド化すること」です。六次産業化とは、一次産業（農業・漁業など）の生産物を、加工（二次産業）・販売（三次産業）まで一体化させ、地域の付加価値を高める取り組みです。"
+      },
+      {
+        question: "経済の地域格差を縮めるために必要なこととして正しいものを選びなさい。",
+        choices: ["大都市にさらに投資する", "すべての産業を都会に集める",  "地域の資源や特性を生かした持続可能な発展を進める", "地方の産業を国際市場から切り離す"],
+        correct: 2,
+        explanation: "正解は「地域の資源や特性を生かした持続可能な発展を進める」です。地域の特色や資源を活用し、自然環境と調和した発展を進めることは、地域の経済力を高め、地域格差を縮める有効な方法です。"
+      },
+      {
+        question: "近年注目されている持続可能な地域づくりの特徴として正しいものを選びなさい。",
+        choices: ["大企業だけが主導して進める", "地域住民やNPO、企業などが協力して進める", "国がすべての計画を一方的に決定する", "地域の伝統や文化は無視して進める"],
+        correct: 1,
+        explanation: "正解は「地域住民やNPO、企業などが協力して進める」です。持続可能な地域づくりは、地域住民・NPO・企業・行政が互いに協力し、地域の特性を活かして行うことが重要です。一方的な計画や外部主導では実現しません。"
       }
     ];
 
