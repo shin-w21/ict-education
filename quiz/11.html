@@ -3,11 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>スマホでできる定期テスト対策問題</title>
-  <link rel="stylesheet" href="setting.css">
+  <title>スマホでできる期末テスト対策問題</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    h1, h2 {
+      color: #333;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .question {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 20px 0;
+      color: #444;
+      line-height: 1.6;
+    }
+
+    .choices {
+      margin: 20px 0;
+    }
+
+    .choices button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 15px;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+    }
+
+    .choices button:hover {
+      background: #e9ecef;
+      border-color: #667eea;
+    }
+
+    .choices button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .result {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #28a745;
+    }
+
+    .explanation {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+      text-align: left;
+    }
+
+    .btn, .btn-re, .btn-title, .next-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 10px;
+    }
+
+    .btn:hover, .btn-re:hover, .btn-title:hover, .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .next-btn-wrapper {
+      margin-top: 20px;
+    }
+
+    .next-btn {
+      display: none;
+    }
+
+    .review-section {
+      margin-top: 30px;
+      text-align: left;
+    }
+
+    .review-item {
+      background: #fff5f5;
+      border: 2px solid #feb2b2;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 15px 0;
+    }
+
+    .review-question {
+      font-weight: bold;
+      color: #c53030;
+      margin-bottom: 10px;
+    }
+
+    .review-answer {
+      color: #38a169;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    .review-explanation {
+      color: #555;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+      
+      .choices button {
+        padding: 12px;
+        font-size: 14px;
+      }
+      
+      .btn, .btn-re, .btn-title, .next-btn {
+        padding: 12px 20px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 
-  
 <body>
 
   <!-- 表紙画面 -->
@@ -33,6 +195,13 @@
   <div class="container hidden" id="end-screen">
     <h1>クイズ終了！</h1>
     <p id="score"></p>
+    
+    <!-- 間違えた問題の復習セクション -->
+    <div class="review-section" id="review-section">
+      <h3 style="color: #c53030; margin-bottom: 20px; text-align: center;">間違えた問題の復習</h3>
+      <div id="wrong-questions"></div>
+    </div>
+    
     <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
   </div>
 
@@ -73,7 +242,8 @@
     let quizData = [];
     let currentQuestionIndex = 0;
     let correctCount = 0;
-    let hasAnswered = false; // 回答済みかどうか
+    let hasAnswered = false;
+    let wrongQuestions = []; // 間違えた問題を記録する配列
 
     function startQuiz() {
       document.getElementById("title-screen").classList.add("hidden");
@@ -83,6 +253,7 @@
       quizData = [...allQuizData].sort(() => 0.5 - Math.random()).slice(0, 5);
       currentQuestionIndex = 0;
       correctCount = 0;
+      wrongQuestions = []; // 間違えた問題をリセット
       loadQuestion();
     }
 
@@ -106,7 +277,7 @@
     }
 
     function checkAnswer(selectedIndex) {
-      if (hasAnswered) return; // すでに回答済みなら無視
+      if (hasAnswered) return;
 
       hasAnswered = true;
       const questionData = quizData[currentQuestionIndex];
@@ -118,20 +289,25 @@
         correctCount++;
       } else {
         resultEl.textContent = "不正解";
+        // 間違えた問題を記録
+        wrongQuestions.push({
+          question: questionData.question,
+          correctAnswer: questionData.choices[questionData.correct],
+          userAnswer: questionData.choices[selectedIndex],
+          explanation: questionData.explanation
+        });
       }
 
       explanationEl.textContent = questionData.explanation;
 
-      // 選択肢をすべて無効化
       const choiceButtons = document.querySelectorAll("#choices button");
       choiceButtons.forEach(btn => btn.disabled = true);
-
 
       const nextButton = document.querySelector(".next-btn");
       nextButton.style.display = "inline-block";
 
       if (currentQuestionIndex === quizData.length - 1) {
-        nextButton.textContent = "次へ"; // 最後だけ「次へ」
+        nextButton.textContent = "次へ";
       }
     }
 
@@ -148,6 +324,29 @@
       document.getElementById("quiz-screen").classList.add("hidden");
       document.getElementById("end-screen").classList.remove("hidden");
       document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です！`;
+      
+      // 間違えた問題の表示
+      const wrongQuestionsContainer = document.getElementById("wrong-questions");
+      const reviewSection = document.getElementById("review-section");
+      
+      if (wrongQuestions.length > 0) {
+        reviewSection.style.display = "block";
+        wrongQuestionsContainer.innerHTML = "";
+        
+        wrongQuestions.forEach((wrongQ, index) => {
+          const reviewItem = document.createElement("div");
+          reviewItem.className = "review-item";
+          reviewItem.innerHTML = `
+            <div class="review-question">問題 ${index + 1}: ${wrongQ.question}</div>
+            <div class="review-answer">正解: ${wrongQ.correctAnswer}</div>
+            <div style="color: #e53e3e; font-weight: 600;">あなたの回答: ${wrongQ.userAnswer}</div>
+            <div class="review-explanation">${wrongQ.explanation}</div>
+          `;
+          wrongQuestionsContainer.appendChild(reviewItem);
+        });
+      } else {
+        reviewSection.style.display = "none";
+      }
     }
 
     function returnToTitle() {
