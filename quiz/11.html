@@ -80,19 +80,28 @@
     .result {
       font-size: 20px;
       font-weight: bold;
-      margin: 20px 0;
+      margin: 20px 0 10px 0;
       color: #28a745;
     }
 
     .explanation {
-      background: #f8f9fa;
-      padding: 20px;
-      border-radius: 10px;
-      margin: 20px 0;
       font-size: 16px;
       line-height: 1.6;
       color: #555;
       text-align: left;
+      margin: 10px 0;
+    }
+
+    .result-explanation-wrapper {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+      display: none;
+    }
+
+    .result-explanation-wrapper.show {
+      display: block;
     }
 
     .btn, .btn-re, .btn-title, .next-btn {
@@ -184,8 +193,13 @@
     <h2>１節<br>私たちが生きる現代社会</h2>
     <p class="question" id="question"></p>
     <div class="choices" id="choices"></div>
-    <p class="result" id="result"></p>
-    <p class="explanation" id="explanation"></p>
+    
+    <!-- 結果と解説を表示する枠 -->
+    <div class="result-explanation-wrapper" id="result-explanation-wrapper">
+      <p class="result" id="result"></p>
+      <p class="explanation" id="explanation"></p>
+    </div>
+    
     <div class="next-btn-wrapper">
       <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
     </div>
@@ -264,6 +278,10 @@
       document.getElementById("choices").innerHTML = "";
       document.getElementById("result").textContent = "";
       document.getElementById("explanation").textContent = "";
+      
+      // 結果・解説の枠を非表示
+      document.getElementById("result-explanation-wrapper").classList.remove("show");
+      
       const nextButton = document.querySelector(".next-btn");
       nextButton.style.display = "none";
       nextButton.textContent = "次の問題へ";
@@ -299,6 +317,9 @@
       }
 
       explanationEl.textContent = questionData.explanation;
+      
+      // 結果・解説の枠を表示
+      document.getElementById("result-explanation-wrapper").classList.add("show");
 
       const choiceButtons = document.querySelectorAll("#choices button");
       choiceButtons.forEach(btn => btn.disabled = true);
@@ -309,6 +330,9 @@
       if (currentQuestionIndex === quizData.length - 1) {
         nextButton.textContent = "次へ";
       }
+
+      // 画面を上部にスクロール
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function nextQuestion() {
@@ -337,7 +361,7 @@
           const reviewItem = document.createElement("div");
           reviewItem.className = "review-item";
           reviewItem.innerHTML = `
-            <div class="review-question">問題 ${index + 1}: ${wrongQ.question}</div>
+            <div class="review-question">Ｑ ${wrongQ.question}</div>
             <div class="review-answer">正解: ${wrongQ.correctAnswer}</div>
             <div style="color: #e53e3e; font-weight: 600;">あなたの回答: ${wrongQ.userAnswer}</div>
             <div class="review-explanation">${wrongQ.explanation}</div>
