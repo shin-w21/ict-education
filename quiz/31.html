@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>スマホでできる定期テスト対策問題</title>
+  <link rel="stylesheet" href="setting.css">
+</head>
+
+  
+<body>
+
+  <!-- 表紙画面 -->
+  <div class="container" id="title-screen">
+    <h2>１節<br>民主政治と日本の政治</h2>
+    <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
+    <button class="btn" onclick="startQuiz()">クイズを始める</button>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div class="container hidden" id="quiz-screen">
+    <h2>１節<br>民主政治と日本の政治</h2>
+    <p class="question" id="question"></p>
+    <div class="choices" id="choices"></div>
+    <p class="result" id="result"></p>
+    <p class="explanation" id="explanation"></p>
+    <div class="next-btn-wrapper">
+      <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+    </div>
+  </div>
+
+  <!-- 終了画面 -->
+  <div class="container hidden" id="end-screen">
+    <h1>クイズ終了！</h1>
+    <p id="score"></p>
+    <div id="review-section"></div>
+    <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+  </div>
+
+  <script>
+    const allQuizData = [
+      {
+        question: "民主政治の基本原則として正しいものを選びなさい。",
+        choices: ["国民が直接すべての政策を決めること", "国民の代表が国政を担う間接民主制", "政治は一部の有力者に任せること", "法律は政府が自由に作り変えられること"],
+        correct: 1,
+        explanation: "正解は「国民の代表が国政を担う間接民主制」です。日本の政治は国民主権のもと、選挙で選ばれた代表者が国民の意思を代弁して政治を行う「間接民主制（議会制民主主義）」です。"
+      },
+      {
+        question: "普通選挙の特徴として正しいものを選びなさい。",
+        choices: ["財産や性別に関係なく、一定の年齢に達した国民に選挙権が与えられる", "一部の有力者だけが投票できる", "投票の内容が公開される", "投票には政府の承認が必要である"],
+        correct: 0,
+        explanation: "正解は「財産や性別に関係なく、一定の年齢に達した国民に選挙権が与えられる」です。普通選挙とは、財産・性別・身分による制限がなく、一定年齢（日本では18歳以上）のすべての国民に投票権が保障される制度です。"
+      },
+      {
+        question: "日本の選挙制度において「一票の格差」と呼ばれる問題の内容として正しいものを選びなさい。",
+        choices: ["一部の人に複数票を与える制度", "地域によって一票の重みが異なること", "投票所に行けない人の票が無効になること", "投票結果がすぐに反映されないこと"],
+        correct: 1,
+        explanation: "正解は「地域によって一票の重みが異なること」です。一票の格差とは、人口が少ない選挙区の有権者の一票が、人口が多い選挙区の一票より重くなる問題です。この格差の是正は重要な課題となっています。"
+      },
+      {
+        question: "選挙制度の原則の一つである「秘密選挙」の意味を述べているものとして正しいものを選びなさい。",
+        choices: ["投票内容が公表される", "誰が投票したかを他人が確認できる", "投票者が誰に投票したかが他人に知られない", "投票所で政府職員が内容を確認する"],
+        correct: 2,
+        explanation: "正解は「投票者が誰に投票したかが他人に知られない」です。秘密選挙は、投票者の意思が自由に反映されるように、誰がどの候補に投票したかが他人に知られないようにする制度です。"
+      },
+      {
+        question: "政治参加の具体例として正しくないものを選びなさい。",
+        choices: ["選挙に立候補する", "政治について議論する", "投票所で買収を行う", "デモや署名運動に参加する"],
+        correct: 2,
+        explanation: "正解は「投票所で買収を行う」です。買収行為は選挙犯罪であり、政治参加とは認められません。選挙や議論、署名活動などが正当な政治参加の例です。"
+      }
+    ];
+
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let hasAnswered = false; // 回答済みかどうか
+    let wrongAnswers = []; // 間違えた問題を記録
+
+    function startQuiz() {
+      document.getElementById("title-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+
+      quizData = [...allQuizData].sort(() => 0.5 - Math.random()).slice(0, 5);
+      currentQuestionIndex = 0;
+      correctCount = 0;
+      wrongAnswers = []; // 間違い記録をリセット
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      hasAnswered = false;
+      const questionData = quizData[currentQuestionIndex];
+      document.getElementById("question").textContent = questionData.question;
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("explanation").textContent = "";
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "none";
+      nextButton.textContent = "次の問題へ";
+
+      questionData.choices.forEach((choice, index) => {
+        const button = document.createElement("button");
+        button.textContent = choice;
+        button.onclick = () => checkAnswer(index);
+        document.getElementById("choices").appendChild(button);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      if (hasAnswered) return; // すでに回答済みなら無視
+
+      hasAnswered = true;
+      const questionData = quizData[currentQuestionIndex];
+      const resultEl = document.getElementById("result");
+      const explanationEl = document.getElementById("explanation");
+
+      if (selectedIndex === questionData.correct) {
+        resultEl.textContent = "正解！";
+        correctCount++;
+      } else {
+        resultEl.textContent = "不正解";
+        // 間違えた問題を記録
+        wrongAnswers.push({
+          question: questionData.question,
+          choices: questionData.choices,
+          correct: questionData.correct,
+          explanation: questionData.explanation,
+          selectedIndex: selectedIndex
+        });
+      }
+
+      explanationEl.textContent = questionData.explanation;
+
+      // 選択肢をすべて無効化
+      const choiceButtons = document.querySelectorAll("#choices button");
+      choiceButtons.forEach(btn => btn.disabled = true);
+
+
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "inline-block";
+
+      if (currentQuestionIndex === quizData.length - 1) {
+        nextButton.textContent = "次へ"; // 最後だけ「次へ」
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    function showEndScreen() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です！`;
+      
+      // 間違えた問題の復習セクションを表示
+      showReviewSection();
+    }
+
+    function showReviewSection() {
+      const reviewSection = document.getElementById("review-section");
+      
+      if (wrongAnswers.length === 0) {
+        reviewSection.innerHTML = '<h3 style="color: #4CAF50; margin-top: 20px;">全問正解！素晴らしいです！</h3>';
+        return;
+      }
+      
+      let reviewHTML = '<h3 style="color: #f44336; margin-top: 20px;">間違えた問題の復習</h3>';
+      
+      wrongAnswers.forEach((wrong, index) => {
+        reviewHTML += `
+          <div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; border-radius: 8px; background-color: #fafafa;">
+            <h4 style="color: #333; margin-bottom: 10px;">問題</h4>
+            <p style="font-weight: bold; margin-bottom: 10px;">${wrong.question}</p>
+            <p style="color: #f44336; margin: 5px 0;"><strong>あなたの回答：</strong> ${wrong.choices[wrong.selectedIndex]}</p>
+            
+            <div style="background-color: #e8f5e8; padding: 10px; margin-top: 10px; border-radius: 4px;">
+              <strong>【解説】</strong><br>
+              ${wrong.explanation}
+            </div>
+          </div>
+        `;
+      });
+      
+      reviewSection.innerHTML = reviewHTML;
+    }
+
+    function returnToTitle() {
+      document.getElementById("title-screen").classList.remove("hidden");
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>
