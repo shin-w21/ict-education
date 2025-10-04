@@ -3,211 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スマホでできる定期テスト対策問題</title>
+    <title>スマホでできる中学校社会科問題集</title>
 
-    <style>
-     body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
-        }
-        .info {
-            text-align: center;
-        }
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2 {
-            color: #333;
-        }
-        .btn {
-            display: block;
-            width: 100%;
-            display: inline-block;
-            padding: 10px 15px;
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .hidden {
-            display: none;
-        }
-        .choices button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .choices button:hover {
-            background-color: #0056b3;
-        }
-        .result {
-            font-size: 16px;
-            margin-top: 15px;
-        }
-        .explanation {
-            font-size: 14px;
-            color: #666;
-            margin-top: 10px;
-        }
-        .next-btn {
-            display: none;
-            margin-top: 15px;
-            padding: 10px 15px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .next-btn:hover {
-            background-color: #218838;
-        }
-
-    </style>
+    <link rel="stylesheet" href="./setting/setting.css">
 
 </head>
+
+
+
 <body>
     <!-- タイトル画面 -->
-    <div class="container" id="title-screen">
-        <h1>スマホでできる<br>定期テスト対策問題</h1>
+
+       <div class="container" id="title-screen">
+        <h1>スマホでできる<br>中学校社会科問題集</h1>
         <div style="text-align: center;">
          <img src="images/textbook.jpg" alt="対策問題の画像" style="max-width: 100%; height: auto;">
         </div>
-        <p>　</p>
-        <p>　</p>
-        <h2>第１章<br>私たちの暮らしと現代社会</h2>
-        <p>教科書P.11〜36</p>
-        <button class="btn" onclick="location.href='./quiz/11.html'">１節<br>私たちが生きる現代社会</button>
-        <button class="btn" onclick="location.href='./quiz/12.html'">２節<br>現代につながる伝統と文化</button>
-        <button class="btn" onclick="location.href='./quiz/13.html'">３節<br>私たちがつくるこれからの社会</button>
-
-        <p>　</p>
-        <p>　</p>
-        <p>　</p>
-        <h2>第２章<br>個人を尊重する日本国憲法</h2>
-        <p>教科書P.37〜80</p>
-        <button class="btn" onclick="location.href='./quiz/21.html'">１節<br>日本国憲法の成り立ちと国民主権</button>
-        <button class="btn" onclick="location.href='./quiz/22.html'">２節<br>憲法が保障する基本的人権</button>
-        <button class="btn" onclick="location.href='./quiz/23.html'">３節<br>私たちと平和主義</button>
-
-        <p>　</p>
-        <p>　</p>
-        <p>　</p>
-        <h2>第３章<br>私たちの暮らしと民主政治</h2>
-        <p>教科書P.81〜126</p>
-        <button class="btn" onclick="location.href='./quiz/31.html'">１節<br>民主政治と日本の政治</button>
-        <button class="btn" onclick="location.href='./quiz/32.html'">２節<br>三権分立のしくみと私たちの政治参加</button>
-        <button class="btn" onclick="location.href='./quiz/33.html'">３節<br>地方自治と住民の参加</button>
-
-        <p>　</p>
-        <p>　</p>
-        <p>　</p>
-        <h2>第４章<br>私たちの暮らしと経済</h2>
-        <p>教科書P.127〜166</p>
-        <button class="btn" onclick="location.href='./quiz/41.html'">１節<br>消費生活と経済活動</button>
-        <button class="btn" onclick="location.href='./quiz/42.html'">２節<br>企業の生産のしくみと労働</button>
-        <button class="btn" onclick="location.href='./quiz/43.html'">３節<br>市場のしくみとはたらき</button>
-        <button class="btn" onclick="location.href='./quiz/44.html'">４節<br>金融のしくみと財政の役割</button>
-
-        <p>　</p>
-        <p>　</p>
-        <p>　</p>
-        <h2>第５章<br>安心して豊かに暮らせる社会</h2>
-        <p>教科書P.167〜190</p>
-        <button class="btn" onclick="location.href='./quiz/51.html'">１節<br>暮らしを支える社会保障</button>
-        <button class="btn" onclick="location.href='./quiz/52.html'">２節<br>これからの日本経済の課題</button>
-
-        <p>　</p>
-        <p>　</p>
-        <p>　</p>
-        <h2>第６章<br>国際社会に生きる私たち</h2>
-        <p>教科書P.191〜226</p>
-        <button class="btn" onclick="location.href='./quiz/61.html'">１節<br>国際社会の平和を目指して</button>
-        <button class="btn" onclick="location.href='./quiz/62.html'">２節<br>国際社会が抱える課題と私たち</button>
+       </div>
 
 
-    </div>
+     <div class="container" id="title-screen">        
+        <h2>地理分野</h2>
+        <p> </p>
+        <button class="btn-chiri" onclick="location.href='./project_03/index.html'">（開発中）</button>
 
-    <p class="info">情報通信技術活用論2025</p>
+        
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>歴史分野</h2>
+        <p> </p>
+        <button class="btn-rekishi" onclick="location.href='./project_02/index.html'">スマホでできる歴史並び替え問題対策ドリル</br>（開発中）</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>公民分野</h2>
+        <p> </p>
+        <button class="btn-komin" onclick="location.href='./project_01/index.html'">スマホでできる公民一問一答問題集</button>
+
+     </div>
+
+
+
+
+    <footer class="copyright">
+      ©️Shin Watanabe
+    </footer>
     
-    <script>
-
-        let quizData = [];
-        let currentQuestionIndex = 0;
-
-        function shuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        function startQuiz() {
-            document.getElementById("title-screen").classList.add("hidden");
-            document.getElementById("quiz-screen").classList.remove("hidden");
-            document.getElementById("end-screen").classList.add("hidden");
-
-            shuffle(allQuizData);
-            quizData = allQuizData.slice(0, 5); // 5問をランダム選出
-            currentQuestionIndex = 0;
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const questionData = quizData[currentQuestionIndex];
-            document.getElementById("question").textContent = questionData.question;
-            document.getElementById("choices").innerHTML = "";
-            document.getElementById("result").textContent = "";
-            document.getElementById("explanation").textContent = "";
-            document.querySelector(".next-btn").style.display = "none";
-
-            questionData.choices.forEach((choice, index) => {
-                const button = document.createElement("button");
-                button.textContent = choice;
-                button.onclick = () => checkAnswer(index);
-                document.getElementById("choices").appendChild(button);
-            });
-        }
-
-        function checkAnswer(selectedIndex) {
-            const questionData = quizData[currentQuestionIndex];
-            document.getElementById("result").textContent = selectedIndex === questionData.correct ? "正解！ 🎉" : "不正解 ❌";
-            document.getElementById("explanation").textContent = questionData.explanation;
-            document.querySelector(".next-btn").style.display = "block";
-        }
-
-        function nextQuestion() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < quizData.length) {
-                loadQuestion();
-            } else {
-                document.getElementById("quiz-screen").classList.add("hidden");
-                document.getElementById("end-screen").classList.remove("hidden");
-            }
-        }
-
-        function returnToTitle() {
-            document.getElementById("end-screen").classList.add("hidden");
-            document.getElementById("title-screen").classList.remove("hidden");
-        }
-    </script>
 </body>
 </html>
