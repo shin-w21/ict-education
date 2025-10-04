@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>スマホでできる定期テスト対策問題</title>
+  <link rel="stylesheet" href="setting.css">
+</head>
+
+  
+<body>
+
+  <!-- 表紙画面 -->
+  <div class="container" id="title-screen">
+    <h2>１節<br>消費生活と経済活動</h2>
+    <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
+    <button class="btn" onclick="startQuiz()">クイズを始める</button>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div class="container hidden" id="quiz-screen">
+    <h2>１節<br>消費生活と経済活動</h2>
+    <p class="question" id="question"></p>
+    <div class="choices" id="choices"></div>
+    <p class="result" id="result"></p>
+    <p class="explanation" id="explanation"></p>
+    <div class="next-btn-wrapper">
+      <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+    </div>
+  </div>
+
+  <!-- 終了画面 -->
+  <div class="container hidden" id="end-screen">
+    <h1>クイズ終了！</h1>
+    <p id="score"></p>
+    <div id="review-section"></div>
+    <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+  </div>
+
+  <script>
+    const allQuizData = [
+      {
+        question: "「家計」の主な役割として、正しいものを選びなさい。",
+        choices: [" 政府の仕事を代行すること", "所得を得て、財やサービスを消費すること", "国際貿易の調整を行うこと", "銀行の経営を監督すること"],
+        correct: 1,
+        explanation: "正解は「所得を得て、財やサービスを消費すること」です。家計とは、家庭が所得を得て、それを使って財（モノ）やサービスを購入し、消費することを指します。家計は経済活動の基本単位の一つです。"
+      },
+      {
+        question: "所得から税金や社会保険料を引いた後に、自由に使えるお金の説明として正しいものを選びなさい。",
+        choices: ["可処分所得", "総所得", "割増所得", "固定所得"],
+        correct: 0,
+        explanation: "正解は「可処分所得」です。可処分所得は、総所得から税金や社会保険料を引いた後、実際に自由に使えるお金のことで、これをもとに消費や貯蓄が行われます。"
+      },
+      {
+        question: "クレジットカードの利用において注意すべきことの説明として正しいものを選びなさい。",
+        choices: ["使えば使うほどお金が増える", "所得を超えて使いすぎないように管理する", "無料で何でも購入できる", "返済しなくても問題ない"],
+        correct: 1,
+        explanation: "正解は「所得を超えて使いすぎないように管理する」です。クレジットカードは立て替え払いの仕組みなので、実際の所得を超えて使いすぎると返済が難しくなり、借金を抱えるリスクがあります。計画的な利用が重要です。"
+      },
+      {
+        question: "現金以外の支払い手段として本文で紹介されていないものを選びなさい。",
+        choices: ["クレジットカード", "電子マネー", "小切手", "銀行振込"],
+        correct: 2,
+        explanation: "正解は「小切手」です。本文では、現金、クレジットカード、電子マネーなどが紹介されていますが、教科書で小切手については触れられていません。"
+      },
+      {
+        question: "消費者を守るために定められた「製造物責任法（PL法）」の特徴として正しいものを選びなさい。",
+        choices: ["消費者が企業の過失を証明しないと賠償されない", "欠陥商品による被害は企業が無条件で賠償する", "製品に欠陥があっても、販売者が責任を負うことはない", "消費者が被害を受けた場合、企業側の過失がなくても賠償責任が生じる"],
+        correct: 3,
+        explanation: "正解は「消費者が被害を受けた場合、企業側の過失がなくても賠償責任が生じる」です。PL法では、欠陥商品によって消費者が被害を受けた場合、消費者側が企業の過失を証明する必要はなく、製造者側に賠償責任が生じます。消費者保護の強化を目的としています。"
+      }
+    ];
+
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let hasAnswered = false; // 回答済みかどうか
+    let wrongAnswers = []; // 間違えた問題を記録
+
+    function startQuiz() {
+      document.getElementById("title-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+
+      quizData = [...allQuizData].sort(() => 0.5 - Math.random()).slice(0, 5);
+      currentQuestionIndex = 0;
+      correctCount = 0;
+      wrongAnswers = []; // 間違い記録をリセット
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      hasAnswered = false;
+      const questionData = quizData[currentQuestionIndex];
+      document.getElementById("question").textContent = questionData.question;
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("explanation").textContent = "";
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "none";
+      nextButton.textContent = "次の問題へ";
+
+      questionData.choices.forEach((choice, index) => {
+        const button = document.createElement("button");
+        button.textContent = choice;
+        button.onclick = () => checkAnswer(index);
+        document.getElementById("choices").appendChild(button);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      if (hasAnswered) return; // すでに回答済みなら無視
+
+      hasAnswered = true;
+      const questionData = quizData[currentQuestionIndex];
+      const resultEl = document.getElementById("result");
+      const explanationEl = document.getElementById("explanation");
+
+      if (selectedIndex === questionData.correct) {
+        resultEl.textContent = "正解！";
+        correctCount++;
+      } else {
+        resultEl.textContent = "不正解";
+        // 間違えた問題を記録
+        wrongAnswers.push({
+          question: questionData.question,
+          choices: questionData.choices,
+          correct: questionData.correct,
+          explanation: questionData.explanation,
+          selectedIndex: selectedIndex
+        });
+      }
+
+      explanationEl.textContent = questionData.explanation;
+
+      // 選択肢をすべて無効化
+      const choiceButtons = document.querySelectorAll("#choices button");
+      choiceButtons.forEach(btn => btn.disabled = true);
+
+
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "inline-block";
+
+      if (currentQuestionIndex === quizData.length - 1) {
+        nextButton.textContent = "次へ"; // 最後だけ「次へ」
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    function showEndScreen() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です！`;
+      
+      // 間違えた問題の復習セクションを表示
+      showReviewSection();
+    }
+
+    function showReviewSection() {
+      const reviewSection = document.getElementById("review-section");
+      
+      if (wrongAnswers.length === 0) {
+        reviewSection.innerHTML = '<h3 style="color: #4CAF50; margin-top: 20px;">全問正解！素晴らしいです！</h3>';
+        return;
+      }
+      
+      let reviewHTML = '<h3 style="color: #f44336; margin-top: 20px;">間違えた問題の復習</h3>';
+      
+      wrongAnswers.forEach((wrong, index) => {
+        reviewHTML += `
+          <div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; border-radius: 8px; background-color: #fafafa;">
+            <h4 style="color: #333; margin-bottom: 10px;">問題</h4>
+            <p style="font-weight: bold; margin-bottom: 10px;">${wrong.question}</p>
+            <p style="color: #f44336; margin: 5px 0;"><strong>あなたの回答：</strong> ${wrong.choices[wrong.selectedIndex]}</p>
+            
+            <div style="background-color: #e8f5e8; padding: 10px; margin-top: 10px; border-radius: 4px;">
+              <strong>【解説】</strong><br>
+              ${wrong.explanation}
+            </div>
+          </div>
+        `;
+      });
+      
+      reviewSection.innerHTML = reviewHTML;
+    }
+
+    function returnToTitle() {
+      document.getElementById("title-screen").classList.remove("hidden");
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>

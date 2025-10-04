@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スマホでできる公民一問一答問題集</title>
+
+    <link rel="stylesheet" href="./setting/setting.css">
+
+</head>
+
+
+
+<body>
+    <!-- タイトル画面 -->
+
+       <div class="container" id="title-screen">
+        <h1>スマホでできる<br>公民一問一答問題集</h1>
+        <div style="text-align: center;">
+         <img src="images/textbook.jpg" alt="対策問題の画像" style="max-width: 100%; height: auto;">
+        </div>
+       </div>
+
+
+     <div class="container" id="title-screen">        
+        <h2>第１章<br>私たちの暮らしと現代社会</h2>
+        <p>教科書P.11〜36</p>
+        <button class="btn" onclick="location.href='./quiz/11.html'">１節<br>私たちが生きる現代社会</button>
+        <button class="btn" onclick="location.href='./quiz/12.html'">２節<br>現代につながる伝統と文化</button>
+        <button class="btn" onclick="location.href='./quiz/13.html'">３節<br>私たちがつくるこれからの社会</button>
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>第２章<br>個人を尊重する日本国憲法</h2>
+        <p>教科書P.37〜80</p>
+        <button class="btn" onclick="location.href='./quiz/21.html'">１節<br>日本国憲法の成り立ちと国民主権</button>
+        <button class="btn" onclick="location.href='./quiz/22.html'">２節<br>憲法が保障する基本的人権</button>
+        <button class="btn" onclick="location.href='./quiz/23.html'">３節<br>私たちと平和主義</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>第３章<br>私たちの暮らしと民主政治</h2>
+        <p>教科書P.81〜126</p>
+        <button class="btn" onclick="location.href='./quiz/31.html'">１節<br>民主政治と日本の政治</button>
+        <button class="btn" onclick="location.href='./quiz/32.html'">２節<br>三権分立のしくみと私たちの政治参加</button>
+        <button class="btn" onclick="location.href='./quiz/33.html'">３節<br>地方自治と住民の参加</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>第４章<br>私たちの暮らしと経済</h2>
+        <p>教科書P.127〜166</p>
+        <button class="btn" onclick="location.href='./quiz/41.html'">１節<br>消費生活と経済活動</button>
+        <button class="btn" onclick="location.href='./quiz/42.html'">２節<br>企業の生産のしくみと労働</button>
+        <button class="btn" onclick="location.href='./quiz/43.html'">３節<br>市場のしくみとはたらき</button>
+        <button class="btn" onclick="location.href='./quiz/44.html'">４節<br>金融のしくみと財政の役割</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>第５章<br>安心して豊かに暮らせる社会</h2>
+        <p>教科書P.167〜190</p>
+        <button class="btn" onclick="location.href='./quiz/51.html'">１節<br>暮らしを支える社会保障</button>
+        <button class="btn" onclick="location.href='./quiz/52.html'">２節<br>これからの日本経済の課題</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <h2>第６章<br>国際社会に生きる私たち</h2>
+        <p>教科書P.191〜226</p>
+        <button class="btn" onclick="location.href='./quiz/61.html'">１節<br>国際社会の平和を目指して</button>
+        <button class="btn" onclick="location.href='./quiz/62.html'">２節<br>国際社会が抱える課題と私たち</button>
+
+     </div>
+
+
+     <div class="container" id="title-screen">
+        <button class="btn" style="background-color: #888; color: white;" onclick="location.href='../index.html'">トップページに戻る</button>
+     </div>
+
+
+    <footer class="copyright">
+      ©️Shin Watanabe
+    </footer>
+    
+    <script>
+
+        let quizData = [];
+        let currentQuestionIndex = 0;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function startQuiz() {
+            document.getElementById("title-screen").classList.add("hidden");
+            document.getElementById("quiz-screen").classList.remove("hidden");
+            document.getElementById("end-screen").classList.add("hidden");
+
+            shuffle(allQuizData);
+            quizData = allQuizData.slice(0, 5); // 5問をランダム選出
+            currentQuestionIndex = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = quizData[currentQuestionIndex];
+            document.getElementById("question").textContent = questionData.question;
+            document.getElementById("choices").innerHTML = "";
+            document.getElementById("result").textContent = "";
+            document.getElementById("explanation").textContent = "";
+            document.querySelector(".next-btn").style.display = "none";
+
+            questionData.choices.forEach((choice, index) => {
+                const button = document.createElement("button");
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(index);
+                document.getElementById("choices").appendChild(button);
+            });
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                document.getElementById("quiz-screen").classList.add("hidden");
+                document.getElementById("end-screen").classList.remove("hidden");
+            }
+        }
+
+        function returnToTitle() {
+            document.getElementById("end-screen").classList.add("hidden");
+            document.getElementById("title-screen").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

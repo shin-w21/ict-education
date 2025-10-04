@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>スマホでできる定期テスト対策問題</title>
+  <link rel="stylesheet" href="setting.css">
+</head>
+
+  
+<body>
+
+  <!-- 表紙画面 -->
+  <div class="container" id="title-screen">
+    <h2>２節<br>これからの日本経済の課題</h2>
+    <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
+    <button class="btn" onclick="startQuiz()">クイズを始める</button>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div class="container hidden" id="quiz-screen">
+    <h2>２節<br>これからの日本経済の課題</h2>
+    <p class="question" id="question"></p>
+    <div class="choices" id="choices"></div>
+    <p class="result" id="result"></p>
+    <p class="explanation" id="explanation"></p>
+    <div class="next-btn-wrapper">
+      <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+    </div>
+  </div>
+
+  <!-- 終了画面 -->
+  <div class="container hidden" id="end-screen">
+    <h1>クイズ終了！</h1>
+    <p id="score"></p>
+    <div id="review-section"></div>
+    <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+  </div>
+
+  <script>
+    const allQuizData = [
+      {
+        question: "経済のグローバル化の説明として正しいものを選びなさい。",
+        choices: ["国内経済だけで発展すること", "地球規模でモノ・お金・人・情報が自由に行き来すること", "政府がすべての貿易を管理すること", "地域経済を国内市場に閉じ込めること"],
+        correct: 1,
+        explanation: "正解は「地球規模でモノ・お金・人・情報が自由に行き来すること」です。経済のグローバル化とは、貿易の自由化や通信・輸送技術の発達により、世界中のモノ・お金・人・情報が国境を越えて行き来し、相互に関わり合う経済の状態を指します。"
+      },
+      {
+        question: "経済のグローバル化が進むことで国内に起きる問題として正しいものを選びなさい。",
+        choices: ["産業の空洞化", "産業の多様化", "労働者の増加", "地域資源の豊富化"],
+        correct: 0,
+        explanation: "正解は「産業の空洞化」です。グローバル化により、企業が安価な労働力や土地を求めて海外移転すると、国内の産業や雇用が減少する「産業の空洞化」が発生します。"
+      },
+      {
+        question: "「六次産業化」の意味として正しいものを選びなさい。",
+        choices: ["一次産業の効率化のみを目指すこと", "輸入品のみに依存する経済構造を作ること", "農業をやめて工業化を進めること", "地元の農産物や水産物を加工・販売し、地域ブランド化すること"],
+        correct: 3,
+        explanation: "正解は「地元の農産物や水産物を加工・販売し、地域ブランド化すること」です。六次産業化とは、一次産業（農業・漁業など）の生産物を、加工（二次産業）・販売（三次産業）まで一体化させ、地域の付加価値を高める取り組みです。"
+      },
+      {
+        question: "経済の地域格差を縮めるために必要なこととして正しいものを選びなさい。",
+        choices: ["大都市にさらに投資する", "すべての産業を都会に集める",  "地域の資源や特性を生かした持続可能な発展を進める", "地方の産業を国際市場から切り離す"],
+        correct: 2,
+        explanation: "正解は「地域の資源や特性を生かした持続可能な発展を進める」です。地域の特色や資源を活用し、自然環境と調和した発展を進めることは、地域の経済力を高め、地域格差を縮める有効な方法です。"
+      },
+      {
+        question: "近年注目されている持続可能な地域づくりの特徴として正しいものを選びなさい。",
+        choices: ["大企業だけが主導して進める", "地域住民やNPO、企業などが協力して進める", "国がすべての計画を一方的に決定する", "地域の伝統や文化は無視して進める"],
+        correct: 1,
+        explanation: "正解は「地域住民やNPO、企業などが協力して進める」です。持続可能な地域づくりは、地域住民・NPO・企業・行政が互いに協力し、地域の特性を活かして行うことが重要です。一方的な計画や外部主導では実現しません。"
+      }
+    ];
+
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let hasAnswered = false; // 回答済みかどうか
+    let wrongAnswers = []; // 間違えた問題を記録
+
+    function startQuiz() {
+      document.getElementById("title-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+
+      quizData = [...allQuizData].sort(() => 0.5 - Math.random()).slice(0, 5);
+      currentQuestionIndex = 0;
+      correctCount = 0;
+      wrongAnswers = []; // 間違い記録をリセット
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      hasAnswered = false;
+      const questionData = quizData[currentQuestionIndex];
+      document.getElementById("question").textContent = questionData.question;
+      document.getElementById("choices").innerHTML = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("explanation").textContent = "";
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "none";
+      nextButton.textContent = "次の問題へ";
+
+      questionData.choices.forEach((choice, index) => {
+        const button = document.createElement("button");
+        button.textContent = choice;
+        button.onclick = () => checkAnswer(index);
+        document.getElementById("choices").appendChild(button);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      if (hasAnswered) return; // すでに回答済みなら無視
+
+      hasAnswered = true;
+      const questionData = quizData[currentQuestionIndex];
+      const resultEl = document.getElementById("result");
+      const explanationEl = document.getElementById("explanation");
+
+      if (selectedIndex === questionData.correct) {
+        resultEl.textContent = "正解！";
+        correctCount++;
+      } else {
+        resultEl.textContent = "不正解";
+        // 間違えた問題を記録
+        wrongAnswers.push({
+          question: questionData.question,
+          choices: questionData.choices,
+          correct: questionData.correct,
+          explanation: questionData.explanation,
+          selectedIndex: selectedIndex
+        });
+      }
+
+      explanationEl.textContent = questionData.explanation;
+
+      // 選択肢をすべて無効化
+      const choiceButtons = document.querySelectorAll("#choices button");
+      choiceButtons.forEach(btn => btn.disabled = true);
+
+
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "inline-block";
+
+      if (currentQuestionIndex === quizData.length - 1) {
+        nextButton.textContent = "次へ"; // 最後だけ「次へ」
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    function showEndScreen() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です！`;
+      
+      // 間違えた問題の復習セクションを表示
+      showReviewSection();
+    }
+
+    function showReviewSection() {
+      const reviewSection = document.getElementById("review-section");
+      
+      if (wrongAnswers.length === 0) {
+        reviewSection.innerHTML = '<h3 style="color: #4CAF50; margin-top: 20px;">全問正解！素晴らしいです！</h3>';
+        return;
+      }
+      
+      let reviewHTML = '<h3 style="color: #f44336; margin-top: 20px;">間違えた問題の復習</h3>';
+      
+      wrongAnswers.forEach((wrong, index) => {
+        reviewHTML += `
+          <div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; border-radius: 8px; background-color: #fafafa;">
+            <h4 style="color: #333; margin-bottom: 10px;">問題</h4>
+            <p style="font-weight: bold; margin-bottom: 10px;">${wrong.question}</p>
+            <p style="color: #f44336; margin: 5px 0;"><strong>あなたの回答：</strong> ${wrong.choices[wrong.selectedIndex]}</p>
+            
+            <div style="background-color: #e8f5e8; padding: 10px; margin-top: 10px; border-radius: 4px;">
+              <strong>【解説】</strong><br>
+              ${wrong.explanation}
+            </div>
+          </div>
+        `;
+      });
+      
+      reviewSection.innerHTML = reviewHTML;
+    }
+
+    function returnToTitle() {
+      document.getElementById("title-screen").classList.remove("hidden");
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+    }
+  </script>
+
+</body>
+</html>
