@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>スマホでできる歴史並び替え問題対策ドリル</title>
+  <link rel="stylesheet" href="setting.css">
+
+  
+</head>
+
+<body>
+
+  <!-- 表紙画面 -->
+  <div class="container" id="title-screen">
+    <h2>１節</br>人類の出現と文明のおこり</h2>
+    <button class="btn-re" onclick="location.href='../index.html'">単元を選び直す</button>
+    <button class="btn" onclick="startQuiz()">クイズを始める</button>
+  </div>
+
+  <!-- クイズ画面 -->
+  <div class="container hidden" id="quiz-screen">
+    <h2>１節</br>人類の出現と文明のおこり</h2>
+    <p class="question" id="question"></p>
+    <ul id="sortable-list"></ul>
+    <button class="check-btn" onclick="checkAnswer()">答え合わせ</button>
+    <div id="result-container"></div>
+    <div class="next-btn-wrapper">
+      <button class="next-btn" onclick="nextQuestion()">次の問題へ</button>
+    </div>
+  </div>
+
+  <!-- 終了画面 -->
+  <div class="container hidden" id="end-screen">
+    <h1>クイズ終了!</h1>
+    <p id="score"></p>
+    <div id="review-section"></div>
+    <button class="btn-title" onclick="location.href='../index.html'">タイトル画面に戻る</button>
+  </div>
+
+  <script>
+    const allQuizData = [
+      {
+        question: "出来事を古い順に並べなさい。",
+        items: [
+          { key: 3, text: "古墳時代" },
+          { key: 1, text: "縄文時代" },
+          { key: 4, text: "奈良時代" },
+          { key: 2, text: "弥生時代" }
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "正しい順序は「縄文時代 → 弥生時代 → 古墳時代 → 奈良時代」です。縄文時代は紀元前14000年頃から、弥生時代は紀元前10世紀頃から、古墳時代は3世紀頃から、奈良時代は710年からです。"
+      },
+      {
+        question: "室町幕府の将軍を順番に並べ替えなさい。",
+        items: [
+          { key: 1, text: "足利 義満" },
+          { key: 2, text: "足利 尊氏" },
+          { key: 3, text: "足利 義政" },
+        ],
+        correct: [2, 1, 3],
+        explanation: "正しい順序は「足利 尊氏→足利 義満→足利 義政」です。室町幕府の歴代将軍です。"
+      },
+      {
+        question: "幕末から明治にかけての出来事を古い順に並べなさい。",
+        items: [
+          { key: 3, text: "明治維新" },
+          { key: 1, text: "ペリー来航" },
+          { key: 4, text: "廃藩置県" },
+          { key: 2, text: "大政奉還" }
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "正しい順序は「ペリー来航(1853年) → 大政奉還(1867年) → 明治維新(1868年) → 廃藩置県(1871年)」です。"
+      },
+      {
+        question: "戦後日本の出来事を古い順に並べなさい。",
+        items: [
+          { key: 3, text: "サンフランシスコ講和条約" },
+          { key: 1, text: "第二次世界大戦 終戦" },
+          { key: 2, text: "日本国憲法の施行" },
+          { key: 4, text: "高度経済成長期" }
+        ],
+        correct: [1, 2, 3, 4],
+        explanation: "正しい順序は「第二次世界大戦終戦(1945年) → 日本国憲法の施行(1947年) → サンフランシスコ講和条約(1951年) → 高度経済成長期(1950年代半ば~1973年)」です。"
+      }
+    ];
+
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let correctCount = 0;
+    let hasAnswered = false;
+    let wrongAnswers = [];
+
+    function startQuiz() {
+      document.getElementById("title-screen").classList.add("hidden");
+      document.getElementById("quiz-screen").classList.remove("hidden");
+      document.getElementById("end-screen").classList.add("hidden");
+
+      quizData = [...allQuizData];
+      currentQuestionIndex = 0;
+      correctCount = 0;
+      wrongAnswers = [];
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      hasAnswered = false;
+      const questionData = quizData[currentQuestionIndex];
+      document.getElementById("question").textContent = questionData.question;
+      
+      const list = document.getElementById("sortable-list");
+      list.innerHTML = "";
+      
+      questionData.items.forEach(item => {
+        const li = document.createElement("li");
+        li.draggable = true;
+        li.dataset.key = item.key;
+        li.innerHTML = `<span class="handle"><div></div></span>${item.text}`;
+        list.appendChild(li);
+      });
+
+      document.getElementById("result-container").innerHTML = "";
+      document.querySelector(".next-btn").style.display = "none";
+      document.querySelector(".next-btn").textContent = "次の問題へ";
+      document.querySelector(".check-btn").style.display = "inline-block";
+
+      setupDragAndDrop();
+    }
+
+    function setupDragAndDrop() {
+      const list = document.getElementById("sortable-list");
+      let dragItem = null;
+      let touchStartY = 0;
+      let isDragging = false;
+
+      // マウスイベント
+      list.addEventListener("dragstart", e => {
+        if (e.target.tagName === "LI") {
+          dragItem = e.target;
+          e.target.classList.add("dragging");
+        }
+      });
+
+      list.addEventListener("dragend", e => {
+        if (e.target.tagName === "LI") {
+          e.target.classList.remove("dragging");
+        }
+      });
+
+      list.addEventListener("dragover", e => {
+        e.preventDefault();
+        if (!dragItem) return;
+        
+        const after = getDragAfterElement(list, e.clientY);
+        if (after) {
+          list.insertBefore(dragItem, after);
+        } else {
+          list.appendChild(dragItem);
+        }
+      });
+
+      // タッチイベント（スマートフォン対応）
+      list.addEventListener("touchstart", e => {
+        const li = e.target.closest("li");
+        if (!li) return;
+        
+        dragItem = li;
+        touchStartY = e.touches[0].clientY;
+        isDragging = true;
+        dragItem.classList.add("dragging");
+      }, { passive: false });
+
+      list.addEventListener("touchmove", e => {
+        if (!isDragging || !dragItem) return;
+        e.preventDefault();
+        
+        const touchY = e.touches[0].clientY;
+        const after = getDragAfterElement(list, touchY);
+        
+        if (after) {
+          list.insertBefore(dragItem, after);
+        } else {
+          list.appendChild(dragItem);
+        }
+      }, { passive: false });
+
+      list.addEventListener("touchend", e => {
+        if (dragItem) {
+          dragItem.classList.remove("dragging");
+          dragItem = null;
+        }
+        isDragging = false;
+      });
+
+      list.addEventListener("touchcancel", e => {
+        if (dragItem) {
+          dragItem.classList.remove("dragging");
+          dragItem = null;
+        }
+        isDragging = false;
+      });
+    }
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+      
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function checkAnswer() {
+      if (hasAnswered) return;
+
+      hasAnswered = true;
+      const questionData = quizData[currentQuestionIndex];
+      const list = document.getElementById("sortable-list");
+      const order = [...list.children].map(li => Number(li.dataset.key));
+      const isCorrect = JSON.stringify(order) === JSON.stringify(questionData.correct);
+
+      const resultContainer = document.getElementById("result-container");
+
+      if (isCorrect) {
+        resultContainer.innerHTML = `
+          <p class="result">正解!</p>
+          <p class="explanation">${questionData.explanation}</p>
+        `;
+        correctCount++;
+      } else {
+        const correctOrder = questionData.correct.map(k => {
+          return questionData.items.find(item => item.key === k).text;
+        }).join(" → ");
+        
+        resultContainer.innerHTML = `
+          <p class="result">不正解</p>
+          <p class="explanation">${questionData.explanation}</p>
+        `;
+
+        wrongAnswers.push({
+          question: questionData.question,
+          userAnswer: order.map(k => questionData.items.find(item => item.key === k).text).join(" → "),
+          correctAnswer: correctOrder,
+          explanation: questionData.explanation
+        });
+      }
+
+      document.querySelector(".check-btn").style.display = "none";
+      const nextButton = document.querySelector(".next-btn");
+      nextButton.style.display = "inline-block";
+
+      if (currentQuestionIndex === quizData.length - 1) {
+        nextButton.textContent = "次へ";
+      }
+    }
+
+    function nextQuestion() {
+      currentQuestionIndex++;
+      if (currentQuestionIndex < quizData.length) {
+        loadQuestion();
+      } else {
+        showEndScreen();
+      }
+    }
+
+    function showEndScreen() {
+      document.getElementById("quiz-screen").classList.add("hidden");
+      document.getElementById("end-screen").classList.remove("hidden");
+      document.getElementById("score").textContent = `あなたの正解数は ${correctCount} / ${quizData.length} です!`;
+      
+      showReviewSection();
+    }
+
+    function showReviewSection() {
+      const reviewSection = document.getElementById("review-section");
+      
+      if (wrongAnswers.length === 0) {
+        reviewSection.innerHTML = '<h3 style="color: #4CAF50; margin-top: 20px;">全問正解!素晴らしいです!</h3>';
+        return;
+      }
+      
+      let reviewHTML = '<h3 style="color: #f44336; margin-top: 20px;">間違えた問題の復習</h3>';
+      
+      wrongAnswers.forEach((wrong, index) => {
+        reviewHTML += `
+          <div style="border: 1px solid #ddd; margin: 15px 0; padding: 15px; border-radius: 8px; background-color: #fafafa; text-align: left;">
+            <h4 style="color: #333; margin-bottom: 10px;">問題</h4>
+            <p style="font-weight: bold; margin-bottom: 10px;">${wrong.question}</p>
+            <p style="color: #f44336; margin: 5px 0;"><strong>あなたの回答:</strong> ${wrong.userAnswer}</p>
+            <p style="color: #4CAF50; margin: 5px 0;"><strong>正解:</strong> ${wrong.correctAnswer}</p>
+            
+            <div style="background-color: #e8f5e8; padding: 10px; margin-top: 10px; border-radius: 4px;">
+              <strong>【解説】</strong><br>
+              ${wrong.explanation}
+            </div>
+          </div>
+        `;
+      });
+      
+      reviewSection.innerHTML = reviewHTML;
+    }
+  </script>
+
+</body>
+</html>
