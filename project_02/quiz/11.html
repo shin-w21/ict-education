@@ -4,7 +4,180 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>スマホでできる歴史並び替え問題対策ドリル</title>
-  <link rel="stylesheet" href="setting.css">
+  <style>
+    @charset "UTF-8";
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-title {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-re {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: gray;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #b34200;
+    }
+
+    .btn-title:hover {
+      background-color: #b34200;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      margin: 5px 0;
+      background: #eef;
+      border-radius: 4px;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    li:active {
+      cursor: grabbing;
+    }
+
+    li.dragging {
+      opacity: 0.5;
+      background: #cce;
+    }
+
+    .handle {
+      width: 18px;
+      height: 14px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .handle::before,
+    .handle::after,
+    .handle div {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #555;
+      border-radius: 2px;
+    }
+
+    .handle::before { top: 0; }
+    .handle div { top: 6px; }
+    .handle::after { bottom: 0; }
+
+    .check-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 15px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .check-btn:hover {
+      background-color: #b34200;
+    }
+
+    .result {
+      font-size: 16px;
+      margin-top: 15px;
+    }
+
+    .explanation {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .next-btn-wrapper {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .next-btn {
+      display: none;
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .next-btn:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 
 <body>
@@ -49,8 +222,6 @@
         correct: [1, 2, 3, 4],
         explanation: "正しい順序は「縄文時代 → 弥生時代 → 古墳時代 → 奈良時代」です。縄文時代は紀元前14000年頃から、弥生時代は紀元前10世紀頃から、古墳時代は3世紀頃から、奈良時代は710年からです。"
       },
-
-
       {
         question: "室町幕府の将軍を順番に並べ替えなさい。",
         items: [
@@ -61,8 +232,6 @@
         correct: [2, 1, 3],
         explanation: "正しい順序は「足利 尊氏→足利 義満→足利 義政」です。室町幕府の歴代将軍です。"
       },
-
-
       {
         question: "幕末から明治にかけての出来事を古い順に並べなさい。",
         items: [
@@ -132,33 +301,90 @@
     function setupDragAndDrop() {
       const list = document.getElementById("sortable-list");
       let dragItem = null;
+      let touchStartY = 0;
+      let isDragging = false;
 
+      // マウスイベント
       list.addEventListener("dragstart", e => {
         if (e.target.tagName === "LI") {
           dragItem = e.target;
-          e.target.style.opacity = 0.5;
+          e.target.classList.add("dragging");
         }
       });
 
       list.addEventListener("dragend", e => {
         if (e.target.tagName === "LI") {
-          e.target.style.opacity = "";
+          e.target.classList.remove("dragging");
         }
       });
 
       list.addEventListener("dragover", e => {
         e.preventDefault();
-        const after = Array.from(list.children).find(li => 
-          e.clientY < li.getBoundingClientRect().top + li.offsetHeight / 2
-        );
-        if (dragItem) {
-          if (after) {
-            list.insertBefore(dragItem, after);
-          } else {
-            list.appendChild(dragItem);
-          }
+        if (!dragItem) return;
+        
+        const after = getDragAfterElement(list, e.clientY);
+        if (after) {
+          list.insertBefore(dragItem, after);
+        } else {
+          list.appendChild(dragItem);
         }
       });
+
+      // タッチイベント（スマートフォン対応）
+      list.addEventListener("touchstart", e => {
+        const li = e.target.closest("li");
+        if (!li) return;
+        
+        dragItem = li;
+        touchStartY = e.touches[0].clientY;
+        isDragging = true;
+        dragItem.classList.add("dragging");
+      }, { passive: false });
+
+      list.addEventListener("touchmove", e => {
+        if (!isDragging || !dragItem) return;
+        e.preventDefault();
+        
+        const touchY = e.touches[0].clientY;
+        const after = getDragAfterElement(list, touchY);
+        
+        if (after) {
+          list.insertBefore(dragItem, after);
+        } else {
+          list.appendChild(dragItem);
+        }
+      }, { passive: false });
+
+      list.addEventListener("touchend", e => {
+        if (dragItem) {
+          dragItem.classList.remove("dragging");
+          dragItem = null;
+        }
+        isDragging = false;
+      });
+
+      list.addEventListener("touchcancel", e => {
+        if (dragItem) {
+          dragItem.classList.remove("dragging");
+          dragItem = null;
+        }
+        isDragging = false;
+      });
+    }
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll("li:not(.dragging)")];
+      
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     function checkAnswer() {
