@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      color: #333;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-title {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn-re {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 20px;
+      background-color: gray;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #b34200;
+    }
+
+    .btn-title:hover {
+      background-color: #b34200;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      font-size: 16px;
+      text-align: left;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      text-align: left;
+    }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px;
+      margin: 5px 0;
+      background: #eef;
+      border-radius: 4px;
+      cursor: grab;
+    }
+
+    li:active {
+      cursor: grabbing;
+    }
+
+    /* CSSで横棒3本を描画 */
+    .handle {
+      width: 18px;
+      height: 14px;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .handle::before,
+    .handle::after,
+    .handle div {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #555;
+      border-radius: 2px;
+    }
+
+    .handle::before { top: 0; }
+    .handle div { top: 6px; }
+    .handle::after { bottom: 0; }
+
+    .check-btn {
+      display: inline-block;
+      padding: 10px 15px;
+      margin-top: 15px;
+      background-color: #ff8400;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .check-btn:hover {
+      background-color: #b34200;
+    }
+
+    .result {
+      font-size: 16px;
+      margin-top: 15px;
+    }
+
+    .explanation {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .next-btn-wrapper {
+      text-align: right;
+      margin-top: 15px;
+    }
+
+    .next-btn {
+      display: none;
+      padding: 10px 15px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .next-btn:hover {
+      background-color: #218838;
+    }

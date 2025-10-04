@@ -1,0 +1,95 @@
+@charset "UTF-8";
+
+    body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .info {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+
+        .btn-chiri {
+            display: block;
+            width: 100%;
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #2aad10;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-chiri:hover {
+            background-color: #1a7a06;
+        }
+
+
+        .btn-rekishi {
+            display: block;
+            width: 100%;
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #ff8400;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-rekishi:hover {
+            background-color: #b34200;
+        }
+
+
+        .btn-komin {
+            display: block;
+            width: 100%;
+            display: inline-block;
+            padding: 10px 15px;
+            margin-top: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-komin:hover {
+            background-color: #0056b3;
+        }
+
+
+
+
+        .hidden {
+            display: none;
+        }
+        .choices button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .choices button:hover {
+            background-color: #0056b3;
+        }
